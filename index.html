@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Keystroke Procera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css?family=Roboto Slab" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink:       #3A2D08;
+    --cloud:     #E0EDF5;
+    --vellum:    #73ADD4(173, 207, 230, 0.3);
+    --rule:      #3A2D08;
+    --accent:    #30719C;
+    --accent-lt: #73ADD4;
+    --red:       #8b2e2e;
+    --mono:      'Roboto Slab', sans-serif;
+    --sans-serif:     'Roboto Slab', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cloud);
+    color: var(--ink);
+    font-family: var(--sans-serif);
+    font-size: 18px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    border-bottom: 1px solid var(--rule);
+    padding: 2.5rem 0 2rem;
+    text-align: center;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    color: #5a534a;
+    max-width: 52ch;
+    margin-inline: auto;
+  }
+
+  /* ── Layout ── */
+  main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  /* ── Section label ── */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rule);
+    border-top: 1px solid var(--rule);
+    padding-top: 0.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  section + section { margin-top: 2.8rem; }
+
+  /* ── Form fields ── */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.5rem;
+  }
+  .field { display: flex; flex-direction: column; gap: 0.3rem; }
+  .field.wide { grid-column: 1 / -1; }
+
+  label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #3A2D08;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    background: var(--vellum);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.55rem 0.75rem;
+    color: var(--ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+    width: 100%;
+  }
+  input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-lt);
+  }
+
+  /* ── Drop zone ── */
+  .dropzone {
+    border: 1.5px dashed var(--rule);
+    border-radius: 3px;
+    padding: 2.2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .dropzone.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-lt);
+  }
+  .dropzone.has-file {
+    border-color: var(--accent);
+    border-style: solid;
+  }
+  .dropzone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  .drop-icon {
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+    opacity: 0.5;
+  }
+  .drop-text {
+    font-size: 0.85rem;
+    color: #6b6257;
+  }
+  .drop-text strong { color: var(--ink); font-style: italic; }
+  .file-chosen {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-top: 0.4rem;
+  }
+
+  /* ── Run button ── */
+  #run-btn {
+    display: block;
+    width: 100%;
+    margin-top: 2rem;
+    padding: 0.95rem 1.5rem;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--sans-serif);
+    font-size: 1rem;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  #run-btn:hover:not(:disabled) { background: #8a8077; }
+  #run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* ── Status log ── */
+  #status-box {
+    display: none;
+    display: none;
+    margin-top: 2rem;
+    background: var(--vellum);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 1rem 1.2rem;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  #status-box.visible { display: block; }
+  #status-log {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: #4a4338;
+  }
+  .log-ok   { color: var(--accent); }
+  .log-err  { color: var(--red); }
+
+  /* ── Download area ── */
+  #download-area {
+    display: none;
+    display: none;
+    margin-top: 2rem;
+    padding: 1.4rem 1.5rem;
+    background: var(--accent-lt);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    text-align: center;
+  }
+  #download-area.visible { display: block; }
+  #download-area p {
+    font-size: 0.9rem;
+    margin-bottom: 0.9rem;
+    color: #30719C;
+  }
+  #download-btn {
+    display: inline-block;
+    padding: 0.7rem 2rem;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.15s;
+  }
+  #download-btn:hover { background: #8a8077; }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 1.4rem 1.5rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #8a8077;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 500px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .field.wide { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Schnappi · TEI-XML converter</p>
+  <h1>Keystroke Procera</h1>
+  <p class="subtitle">Upload a Schnappi session (.ses) file and receive a TEI-XML for keystroke logging encoding base layer — all processed locally in your browser.</p>
+</header>
+
+<main>
+  <section>
+    <p class="section-label">Step 1 — Metadata</p>
+    <div class="field-grid">
+      <div class="field wide">
+        <label for="f-author">Author</label>
+        <input type="text" id="f-author" placeholder="e.g. Jane Doe" />
+      </div>
+      <div class="field wide">
+        <label for="f-title">Title</label>
+        <input type="text" id="f-title" placeholder="e.g. Writing Life" />
+      </div>
+      <div class="field">
+        <label for="f-session">Session</label>
+        <input type="number" id="f-session" value="01" min="01" />
+      </div>
+      <div class="field">
+        <label for="f-version">Version</label>
+        <input type="number" id="f-version" value="01" min="01" />
+      </div>
+      <div class="field wide">
+        <label for="f-outname">Output filename <span style="font-size:0.6rem;opacity:.6">(.xml will be automatically added)</span></label>
+        <input type="text" id="f-outname" placeholder="e.g. Doe_01_s01" />
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">Step 2 — Session data (.ses)</p>
+    <div class="dropzone" id="dropzone">
+      <input type="file" id="file-input" accept=".ses,.xml" />
+      <div class="drop-icon">⌨</div>
+      <p class="drop-text"><strong>Choose a file</strong> or drag it here</p>
+      <p class="drop-text">Schnappi session data · .ses</p>
+      <p class="file-chosen" id="file-chosen"></p>
+    </div>
+  </section>
+
+  <button id="run-btn" disabled>Generate TEI-XML</button>
+
+  <div id="status-box">
+    <div id="status-log"></div>
+  </div>
+
+  <div id="download-area">
+    <p>Your TEI-XML file is ready.</p>
+    <a id="download-btn" href="#">Download XML</a>
+  </div>
+</main>
+
+<footer>
+  Made by <a href="https://www.uantwerpen.be/en/staff/lamyk-bekius/" target="_blank">Lamyk Bekius</a> ·
+  Contribution to <a href="https://clariahvl.hypotheses.org/" target="_blank">CLARIAH-VL+</a> ·
+  Runs entirely in your browser via <a href="https://pyodide.org" target="_blank">Pyodide</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
